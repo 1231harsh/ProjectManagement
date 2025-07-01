@@ -1,0 +1,49 @@
+package com.projectManagement.proj.controller;
+
+import com.projectManagement.proj.entity.Project;
+import com.projectManagement.proj.service.ProjectService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:5173")
+public class ProjectController {
+
+    private final ProjectService projectService;
+
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
+
+    // Public - Get all projects
+    @GetMapping("/projects")
+    public ResponseEntity<List<Project>> getAllProjects() {
+        List<Project> projects = projectService.getAllProjects();
+        return ResponseEntity.ok(projects);
+    }
+
+    // Admin - Create a new project
+    @PostMapping("/admin/projects")
+    public ResponseEntity<Project> createProject(@RequestBody Project project) {
+        Project createdProject = projectService.createProject(project);
+        return ResponseEntity.ok(createdProject);
+    }
+
+    // Admin - Update an existing project
+    @PostMapping("/admin/projects/{id}")
+    public ResponseEntity<Project> updateProject(@PathVariable Long id,@RequestBody Project project) {
+        Project updatedProject = projectService.updateProject(id, project);
+        return ResponseEntity.ok(updatedProject);
+    }
+
+    // Admin - Delete a project
+    @PostMapping("/admin/projects/{id}/delete")
+    public ResponseEntity<Void> deleteProject(Long id) {
+        projectService.deleteProject(id);
+        return ResponseEntity.noContent().build();
+    }
+
+}
